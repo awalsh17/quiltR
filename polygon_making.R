@@ -1,0 +1,113 @@
+# This script is a stream of consciousness working on this project
+
+library(dplyr)
+library(ggplot2)
+library(retistruct) # to get intersection
+
+set.seed(45)
+
+# method 1 - geom_segment ----
+
+# for each cube, it is either 7 or 9 segments
+# need a x for the center and left, right sides
+# then calc all the segments from there based on vp
+
+source("functions/make_new_cube.R")
+
+xes <- c(1, 2, 3) #left, center, right
+yes <- c(4, 6) #bottom, top of center
+
+# can create any n of cubes
+cube <- list()
+for (n in 1:3) {
+  cube[[n]] <- make_new_cube(xes = sort(sample(0:9, 3)),
+                             yes = sort(sample(-10:10, 2)),
+                             vp_scale = 30)
+}
+cube <- dplyr::bind_rows(cube)
+
+# use ggplot to plot the cubes ----
+cube %>%
+  ggplot() +
+  geom_segment(aes(x = x, y = y, xend = xend, yend = yend)) +
+  xlim(c(0,30)) +
+  ylim(c(-10,10)) +
+  theme_void()
+
+# method 2 - geom_polygon ----
+source("functions/make_new_poly.R")
+poly <- make_new_poly(xes = c(2,4,5), yes = c(1,5))
+
+
+# RUN IT -----
+source("functions/create_pattern_pdf.R")
+source("functions/save_my_image.R")
+
+d <- save_my_image("tests/simple_cubes10.png",
+                   height_range = 2:29,
+                   width_range = 2:20,
+                   n_cubes = 3, n_second_color = 1)
+
+create_pattern_pdf(d = d, filename = "tests/pattern_8.pdf")
+
+saveRDS(d, "tests/test_10.Rds")
+# you can print with tiling using Adobe reader.
+# open the PDF there
+
+# Or create blocks by splitting the area into n x n areas
+# Then make those each their own page
+
+missing_paths <- d %>% arrange(desc(cube_id))
+scale_factor <- 40 / 30 # change if you change vp above
+width_blocks <- 40 / 5
+
+horizontal <- data.frame(cube_id = c("",""),
+                         x = c(0, 30),
+                         y = c(0, 0)) %>%
+  mutate(x = x*scale_factor, y = y*scale_factor)
+
+# design goes from x 0 - 40, y -20, 20
+grid <- tidyr::crossing(x = seq(0, 32, width_blocks),
+                        y = seq(-20, 12, width_blocks)) %>%
+  mutate(x_end = x + width_blocks,
+         y_end = y + width_blocks) %>%
+  arrange(x, y)
+
+for (i in seq_len(nrow(grid))) {
+  block <- d %>%
+    bind_rows(missing_paths) %>%
+    arrange(cube_id) %>%
+    mutate(x = x*scale_factor, y = y*scale_factor) %>%
+    group_by(id) %>%
+    mutate(ave_x = mean(x), ave_y = mean(y)) %>%
+    ungroup() %>%
+    ggplot() +
+    # horizon line
+    geom_path(aes(x = x, y = y, group = cube_id),
+              data = horizontal,
+              alpha = 1,
+              color = "black",
+              size = 1) +
+    geom_path(aes(x = x, y = y, group = id),
+              alpha = 1,
+              color = "black",
+              size = 2) +
+    geom_polygon(aes(x = x, y = y, group = id),
+                 fill = "white", color = "blue",
+                 size = 0.5,
+                 alpha = 1) +
+    geom_text(aes(label = cube_id, x = ave_x, y = ave_y)) +
+    # xlim(c(0, quilt_size)) + ylim(c(-(quilt_size/2), (quilt_size/2))) +
+    coord_equal(clip = "off",
+                xlim = c(grid$x[i], grid$x_end[i]),
+                ylim = c(grid$y[i], grid$y_end[i]),
+                expand = FALSE) +
+    theme_void() +
+    # theme_minimal() +
+    theme(legend.position = "none",
+          panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+  ggsave(plot = block,
+         filename = paste0("results/",i,".pdf"),
+         width = width_blocks, height = width_blocks)
+}
+
