@@ -16,15 +16,16 @@
 #' @examples
 #' \dontrun {
 #' d <- save_my_image("tests/simple_cubes10.png",
-#' height_range = 2:29,
-#' width_range = 2:20,
+#' height_range = 20:60,
+#' width_range = 10:30,
 #' n_cubes = 3, n_second_color = 1)
 #' }
 save_my_image <- function(out_path = NULL,
                           n_cubes = 20,
                           n_second_color = 3,
-                          height_range = 3:6,
-                          width_range = 3:6,
+                          height_range = 30:60,
+                          width_range = 30:60,
+                          horizon_y = 50,
                           color_values = c("#E8958A",
                                            "#FDBFA7",
                                            "#CB563B",
@@ -34,7 +35,8 @@ save_my_image <- function(out_path = NULL,
                                            "#4B5D79",
                                            "#353747",
                                            "white",
-                                           "gray95")
+                                           "gray95"),
+                          ...
                           ) {
 
   # need a named vector to make the ids we provide
@@ -55,24 +57,25 @@ save_my_image <- function(out_path = NULL,
   for (n in 1:n_cubes) {
     n_tall <- sample(height_range, 1, replace = T)
     n_wide <- sample(width_range, 1, replace = T)
-    xes <- sort(c(0,sample(1:n_wide, 2))) + sample(1:(29-n_wide), 1)
-    yes <- sort(sample(-(n_tall/2):(n_tall/2), 2)) +
-      sample(-(15-n_tall/2):(15-n_tall/2), 1)
+    xes <- sort(c(0, sample(1:n_wide, 2))) + sample(1:(99-n_wide), 1)
+    yes <- sort(sample(0:n_tall, 2)) +
+      sample(1:(99-n_tall), 1)
     poly[[n]] <- make_new_poly(xes = xes,
                                yes = yes,
-                               vp_scale = 30)
+                               horizon_y = horizon_y,
+                               ...)
   }
   poly <- dplyr::bind_rows(poly, .id = "cube_id")
   poly$id <- paste0(poly$cube_id, poly$id)
   # add a background poly
   sky <- data.frame(cube_id = "sky",
-                    x = c(0, 0, 30, 30),
-                    y = c(0, 17, 17, 0),
+                    x = c(0, 0, 100, 100),
+                    y = c(horizon_y, 100, 100, horizon_y),
                     id = "sky",
                     value = "sky")
   ground <- data.frame(cube_id = "ground",
-                       x = c(0, 0, 30, 30),
-                       y = c(0, -17, -17, 0),
+                       x = c(0, 0, 100, 100),
+                       y = c(horizon_y, 0, 0, horizon_y),
                        id = "ground",
                        value = "ground")
   background_poly <- rbind(sky, ground)

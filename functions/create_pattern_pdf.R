@@ -1,21 +1,21 @@
 # Convert this into something can be printed as templates for quilting
-# Need the background to be cut into rectangles and triangles
-# cubes can be one piece (can sew the corners where 3 pieces join)
 # need to choose the size you want the pattern to be
-# (Can I add the 1/4" allowance here? or do that when cutting?)
+# notes: I don't think this handles non-square patterns now
 
 create_pattern_pdf <- function(quilt_size = 36,
                                d,
-                               filename){
+                               filename,
+                               vp = 100,
+                               horizon_y = 50){
   # quilt_size units are arbitrary, here I am using inches
-  scale_factor <- quilt_size / 30 # change if you change vp above
+  scale_factor <- quilt_size / vp # change if you change vp
   # output the dimensions for each piece in each color
   # a single piece of paper with the outline of the piece.
   # 8.5 * 12 paper
   missing_paths <- d %>% arrange(desc(cube_id))
   horizontal <- data.frame(cube_id = c("",""),
-                           x = c(0, 30),
-                           y = c(0, 0)) %>%
+                           x = c(0, vp),
+                           y = c(horizon_y, horizon_y)) %>%
     mutate(x = x*scale_factor, y = y*scale_factor)
   pattern <- d %>%
     bind_rows(missing_paths) %>%
@@ -42,7 +42,7 @@ create_pattern_pdf <- function(quilt_size = 36,
                  alpha = 1) +
     geom_text(aes(label = cube_id, x = ave_x, y = ave_y)) +
     # xlim(c(0,8.5)) + ylim(c(0,11)) +
-    xlim(c(0, quilt_size)) + ylim(c(-(quilt_size/2), (quilt_size/2))) +
+    xlim(c(0, quilt_size)) + ylim(c(0, quilt_size)) +
     coord_equal(clip = "on", expand = FALSE) +
     theme_void() +
     # theme_minimal() +

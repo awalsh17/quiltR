@@ -35,40 +35,65 @@ cube %>%
   theme_void()
 
 # method 2 - geom_polygon ----
+# this is now using a "field" from (0,0) to (100,100)
 source("functions/make_new_poly.R")
-poly <- make_new_poly(xes = c(2,4,5), yes = c(1,5))
+poly <- make_new_poly(xes = c(20,40,80),
+                      yes = c(60,80),
+                      horizon_y = 20) # mess with different horizons
 
+# add a background poly
+background_poly <- data.frame(cube_id = "sky",
+                  x = c(0, 0, 100, 100),
+                  y = c(0, 100, 100, 0),
+                  id = "sky",
+                  value = "sky")
+# plot the poly
+poly %>%
+  ggplot() +
+  geom_polygon(alpha = 1, aes(x = x, y = y, group = id),
+               fill = "gray90",
+               data = background_poly, inherit.aes = FALSE) +
+  geom_polygon(aes(x = x, y = y, group = id, fill = value),
+               alpha = 1) +
+  theme_minimal() +
+  theme(legend.position = "none")
 
 # RUN IT -----
 source("functions/create_pattern_pdf.R")
 source("functions/save_my_image.R")
 
-d <- save_my_image("tests/simple_cubes10.png",
-                   height_range = 2:29,
-                   width_range = 2:20,
+d <- save_my_image("tests/simple_cubes3.png",
+                   horizon_y = 80,
+                   height_range = 10:40,
+                   width_range = 20:80,
                    n_cubes = 3, n_second_color = 1)
 
-create_pattern_pdf(d = d, filename = "tests/pattern_8.pdf")
+create_pattern_pdf(d = d, filename = "tests/simple_cubes3.pdf")
 
 saveRDS(d, "tests/test_10.Rds")
+
 # you can print with tiling using Adobe reader.
-# open the PDF there
+# open the PDF there.
 
 # Or create blocks by splitting the area into n x n areas
 # Then make those each their own page
 
+# Below is the code - have not wrapped into a function.
+# Because I would like to also incorporate smarter code to
+# auto-do some FPP
+
 missing_paths <- d %>% arrange(desc(cube_id))
-scale_factor <- 40 / 30 # change if you change vp above
-width_blocks <- 40 / 5
+scale_factor <- 40 / 100 # change if you change vp above
+width_blocks <- 40 / 5   # how many blocks across (I wanted 8")
 
 horizontal <- data.frame(cube_id = c("",""),
-                         x = c(0, 30),
-                         y = c(0, 0)) %>%
+                         x = c(0, 100),
+                         y = c(50, 50)) %>%
   mutate(x = x*scale_factor, y = y*scale_factor)
 
-# design goes from x 0 - 40, y -20, 20
+# design goes from x 0 - 40, y 0, 40
 grid <- tidyr::crossing(x = seq(0, 32, width_blocks),
-                        y = seq(-20, 12, width_blocks)) %>%
+                        y = seq(0, 32, width_blocks)) %>%
   mutate(x_end = x + width_blocks,
          y_end = y + width_blocks) %>%
   arrange(x, y)
@@ -107,7 +132,7 @@ for (i in seq_len(nrow(grid))) {
     theme(legend.position = "none",
           panel.border = element_rect(colour = "black", fill=NA, size=0.5))
   ggsave(plot = block,
-         filename = paste0("results/",i,".pdf"),
+         filename = paste0("to_print/",i,".pdf"),
          width = width_blocks, height = width_blocks)
 }
 

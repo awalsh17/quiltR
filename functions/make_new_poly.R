@@ -2,18 +2,26 @@
 
 #' Make a box in 2-point perspective, but in a format to go into geom_polygon
 #'
-#' @param xes
-#' @param yes
-#' @param vp_scale
+#' The "field" is from (0,0) to (100,100) by default, but you can change
+#' the aspect ratio with total_width.
+#' The horizon is default half-way up the field at y = 50, but you can
+#' change that with horizon_y.
+#'
+#' @param xes x coordinates of the three vertical lines
+#' @param yes y min and max height of the center vertical
+#' @param total_width (100) make it wider for a landscape
+#' @param horizon_y (50) make it smaller to move horizon down, higher to move up
 #'
 #' @return
 #' @export
 #'
 #' @examples
-make_new_poly <- function(xes, yes,
-                          vp_scale = 10) {
-  # pick the vanishing points (y == 0)
-  vp <- list(c(0, 0), c(vp_scale, 0))
+make_new_poly <- function(xes,
+                          yes,
+                          total_width = 100,
+                          horizon_y = 50) {
+  # pick the vanishing points
+  vp <- list(c(0, horizon_y), c(total_width, horizon_y))
   # make the center vertical segment
   cube <- data.frame(
     x = xes[2],
@@ -24,9 +32,10 @@ make_new_poly <- function(xes, yes,
 
   # add the left vertical segment
   new_row <- c(
-    xes[1], xes[1],
-    (yes[1] / xes[2]) * xes[1],
-    (yes[2] / xes[2]) * xes[1]
+    xes[1],
+    xes[1],
+    ((yes[1] - horizon_y) / xes[2]) * xes[1] + horizon_y,
+    ((yes[2] - horizon_y) / xes[2]) * xes[1] + horizon_y
   )
   cube <- rbind(cube, new_row)
 
@@ -47,9 +56,10 @@ make_new_poly <- function(xes, yes,
   )
 
   new_row <- c(
-    xes[3], xes[3],
-    (yes[1] / (xes[2] - vp[[2]][1])) * (xes[3] - xes[2]) + yes[1],
-    (yes[2] / (xes[2] - vp[[2]][1])) * (xes[3] - xes[2]) + yes[2]
+    xes[3],
+    xes[3],
+    ((yes[1] - horizon_y) / (xes[2] - total_width)) * (xes[3] - xes[2]) + yes[1],
+    ((yes[2] - horizon_y) / (xes[2] - total_width)) * (xes[3] - xes[2]) + yes[2]
   )
   cube2 <- rbind(cube2, new_row)
 
@@ -62,9 +72,9 @@ make_new_poly <- function(xes, yes,
   )
   poly <- rbind(poly, poly2)
 
-  # if all above or below y = 0,  then get bottom or top segments
-  add_top <- all(poly$y < 0)
-  add_bottom <- all(poly$y > 0)
+  # if all above or below horizon,  then get bottom or top segments
+  add_top <- all(poly$y < horizon_y)
+  add_bottom <- all(poly$y > horizon_y)
 
   if (add_top) {
     # intersect left bottom [2,3] to right vp and right bottom [3,3] to left vp
@@ -72,9 +82,8 @@ make_new_poly <- function(xes, yes,
     P2 <- vp[[2]] # right vp
     P3top <- c(xes[3], max(poly$y[poly$x == xes[3]])) # right top
     P4 <- vp[[1]] # left vp
-    poss_top <- line.line.intersection(P1top, P2,
-      P3top, P4,
-      interior.only = TRUE
+    poss_top <- line.line.intersection(P1top, P2, P3top, P4,
+                                       interior.only = TRUE
     )
     # this is the third polygon
     poly3 <- data.frame(
@@ -94,9 +103,8 @@ make_new_poly <- function(xes, yes,
     P2 <- vp[[2]] # right vp
     P3bottom <- c(xes[3], min(poly$y[poly$x == xes[3]])) # right bottom
     P4 <- vp[[1]] # left vp
-    poss_bot <- line.line.intersection(P1bottom, P2,
-      P3bottom, P4,
-      interior.only = TRUE
+    poss_bot <- line.line.intersection(P1bottom, P2, P3bottom, P4,
+                                       interior.only = TRUE
     )
     # this is the third polygon
     poly3 <- data.frame(
