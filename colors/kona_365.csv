@@ -1,0 +1,367 @@
+fabric_name,color
+Lavender 1189,#9891f5
+Amethyst 1003,#6764f1
+Bright Periwinkle 1048,#3e29f1
+Velvet 1857,#2c03e5
+Purple 1301,#210785
+Midnight 1232,#1a0a4e
+Tulip 327,#4725bb
+Heliotrope 477,#5227ec
+Crocus 142,#7337f3
+Morning Glory 495,#7c4bff
+Wisteria 1392,#9e72ff
+Lilac 1191,#b6a4e5
+Orchid Ice 1850,#c1a0ff
+Thistle 134,#dab4fe
+Princess 844,#e7c7ff
+Lupine 1484,#cd7efb
+Pansy 258,#cb7cff
+Violet 1383,#a252e2
+Dahlia 488,#9e52ff
+Magenta 1214,#9034ea
+Mahogany 1215,#9034ea
+Mulberry 80,#4503a6
+Hibiscus 188,#340f51
+Dk. Violet 1485,#6103ac
+Geranium 473,#8d12de
+Gumdrop 489,#df3cfc
+Ballerina 485,#e381fe
+Corsage 487,#ed97ff
+Orchid 1266,#f4c7ff
+Petunia 24,#fcbfff
+Petal 143,#ffacff
+Carnation 141,#ff7ef4
+Candy Pink 1062,#ff6cff
+Sassy Pink 845,#ff45ff
+Bright Pink 1049,#ff2aff
+Dragon Fruit 1841,#ff2cff
+Valentine 451,#e710d5
+Cerise 1066,#9e0392
+Plum 1294,#892881
+Eggplant 1133,#400c51
+Raisin 1469,#2a102c
+Burgundy 1054,#450b27
+Bordeaux 1039,#53003f
+Berry 1016,#5f0067
+Sangria 481,#9c0057
+Deep Rose 1099,#b51a63
+Pomegranate 1295,#e70076
+Honeysuckle 490,#ff10c2
+Azalea 419,#ff2fba
+Blush Pink 1036,#f653c4
+Bubble Gum 261,#ff7de3
+Med. Pink 1225,#ff9be1
+Baby Pink 189,#ffb5f1
+Peony 110,#ffb4e5
+Pink 1291,#ffb4e0
+Foxglove 956,#de94c4
+Rose 1310,#cb7792
+Woodrose 1393,#fb77c3
+Melon 1228,#ff5bae
+Camellia 190,#ff389c
+Punch 447,#ff2b86
+Watermelon 1384,#ff1362
+Lipstick 1194,#fe0209
+Chili 1838,#f50804
+Poppy 1296,#ea0106
+Tomato 7,#eb0502
+Red 1308,#e3000a
+Cardinal 1063,#d00006
+Wine 1390,#950020
+Rich Red 1551,#9f0003
+Ruby 352,#9c0000
+Chinese Red 1480,#8b0012
+Crimson 1091,#6b021e
+Garnet 1151,#550d24
+Brick 1042,#520e17
+Shell 1271,#ffe5ee
+Pearl Pink 1283,#ffe2f1
+Ballet Slipper 861,#ffcfdd
+Dusty Peach 1465,#ffbbcc
+Bellini 1144,#ffb5d7
+Primrose 274,#ffa1c5
+Salmon 1483,#ff6672
+Coral 1087,#ff243c
+Tiger Lily 957,#f52201
+Flame 323,#ff1a00
+Pimento 865,#f31702
+Cayenne 355,#aa0d0d
+Paprika 150,#ad1102
+Cocoa 1082,#5e0c04
+Brown 1045,#511c18
+Cinnamon 1075,#8b1d00
+Spice 159,#b32d00
+Sienna 1332,#c6352a
+Terracotta 482,#c72900
+Nectarine 496,#fe4238
+Orangeade 853,#fe453d
+Creamsicle 185,#ff7b7e
+Peach 1281,#ffaaab
+Ice Peach 1176,#ffc7c0
+Lt. Parfait 1205,#ffdec6
+Cantaloupe 59,#ff8c50
+Mango 192,#ff6744
+Persimmon 84,#ff5e1e
+Carrot 400,#ff4e17
+Marmalade 1848,#f74602
+Tangerine 1370,#ff3804
+Torch 450,#ff4605
+Clementine 1839,#ff5203
+Kumquat 410,#ff540a
+Orange 1265,#ff5b00
+Cedar 443,#ca5300
+Roasted Pecan 857,#7f4301
+Gold 1154,#c66600
+Amber 1479,#ed770d
+Saffron 1320,#f07400
+Nacho Cheese 1849,#fd7901
+School Bus 1482,#ff7b09
+Goldfish 474,#ff881b
+Mac And Cheese 851,#fea03d
+Butterscotch 349,#f69425
+Caramel 1698,#cb7f2d
+Yarrow 1478,#c67900
+Grellow 476,#de8e00
+Ochre 1704,#f4a31b
+Papaya 149,#ff9a01
+Sunny 449,#feac00
+Cheddar 350,#ffaa2e
+Corn Yellow 1089,#ffb009
+Daffodil 148,#ffc448
+Banana 1481,#ffd363
+Mustard 1240,#ffd07f
+Butter 1055,#ffe4a9
+Scone 499,#dfd178
+Honey 1162,#cbbd52
+Leather 178,#876d07
+Curry 1677,#c59600
+Duckling 840,#fec50a
+Sunflower 353,#fecb33
+Lemon 23,#fce162
+Buttercup 1056,#fae453
+Maize 1216,#faf085
+Meringe 1229,#f9f39e
+Lemon Ice 1846,#faffa1
+Citrus 1077,#fbde04
+Canary 26,#f8d620
+Banana Pepper 1835,#e8cb0a
+Pickle 480,#abaa00
+Zucchini 354,#d7d34b
+Wasabi 452,#e2d606
+Bright Idea 838,#faf12e
+Acid Lime 860,#e8ff16
+Key Lime 842,#d1ff36
+Celery 1706,#dee47a
+Limelight 493,#bde51f
+Peapod 414,#b1d700
+Bonsai,#88a800
+Olive 1263,#879e00
+Ivy 165,#6b841c
+Avocado 1451,#415400
+Peridot 317,#65a300
+Gecko 1843,#6fab00
+Lime 1192,#7eb500
+Tarragon 316,#b0d557
+Summer Pear 1856,#daff82
+Honey Dew 21,#d5ff70
+Cactus 199,#c6ff35
+Chartreuse 1072,#acfb01
+Sprout 254,#c0ff3e
+Green Tea 351,#b9f154
+Cabbage 472,#a3e93e
+Grass Green 1703,#61b607
+O.D. Green 1256,#6ba24d
+Dill 1840,#4c8a33
+Mint 1234,#ceffb2
+Pear 145,#99ff5c
+Sour Apple 144,#70ff22
+Botanical 1836,#6ff71b
+Palm 31,#39810b
+Evergreen 1137,#1e3a11
+Basil 136,#2e7009
+Leprechaun 411,#50ff0f
+Parrot 498,#5cff03
+Pistachio 1293,#75ff4e
+Asparagus 348,#83ff56
+Spring 29,#92f26b
+Celadon 1065,#7ae05c
+Old Green 1259,#6fd45a
+Laurel 30,#5cd13c
+Leaf 28,#4ad32e
+Juniper 409,#1e4e0d
+Hunter Green 1166,#1d4018
+Jungle 147,#228d00
+Grasshopper 475,#2bce00
+Kiwi 1188,#3eff00
+Parakeet 221,#7fff6a
+Desert Green 849,#d0f7d1
+Sea Mist 1852,#d8ffd6
+Seafoam 1328,#beffbe
+Pond 200,#9fffa4
+Ferndale 1842,#72ff6c
+Fern 1141,#3fff29
+Clover 135,#29e212
+Holly 1161,#1dae21
+Pesto 453,#116608
+Kelly 1185,#115415
+Forest 1145,#13471a
+Spruce 1361,#0f4823
+Balsam 1834,#13791e
+Willow 1388,#177f2f
+Emerald 1135,#1a8b43
+Bluegrass 1031,#32e363
+Kale 445,#33ed54
+Cypress 1474,#4cff79
+Sage 1321,#67f098
+Aloe 197,#84ff9e
+Aruba 837,#9fffbf
+Ice Frappe 1173,#b6ffd2
+Aqua 1005,#b4ffdd
+Aloha 1833,#a7ffcf
+Dusty Blue 362,#96f3ca
+Candy Green 1061,#62ffa3
+Pool 45,#62ffb5
+Jade Green 1183,#32cc93
+Ultra Marine 483,#157547
+Everglade 356,#125d44
+Glacier 146,#157a70
+Breakers 440,#37dbab
+Splash 1789,#62ffc5
+Capri 442,#70ffcd
+Azure 1009,#87ffd8
+Bahama Blue 1011,#8bffea
+Waterfall 866,#7ce4e4
+Seascape 1853,#73f4de
+Jamaica 491,#5fffe2
+Peacock 1282,#4af1ec
+Turquoise 1376,#3ac1e1
+Cyan 151,#2cb4b4
+Caribbean 1064,#1c83a0
+Oasis 446,#1570b3
+Celestial 233,#064681
+Navy 1243,#09212d
+Windsor 1389,#14374d
+Teal Blue 1373,#297a86
+Fog 444,#99dacd
+Blue 1028,#baf5f1
+Sky 1513,#e8fff9
+Sea Glass 846,#d4fff7
+Baby Blue 1010,#bcfff5
+Robin Egg 1514,#a2fff4
+Niagara 497,#67f9f6
+Alegria 405,#5be7f7
+Water 171,#45d5f9
+Lagoon 139,#3ac7ea
+Paris Blue 864,#37b0fc
+Stratosphere 448,#4fceff
+Spa Blue 847,#a2f5f8
+Breeze 266,#adf7fc
+Lake 194,#b1fbff
+Cloud 152,#cef9ff
+Prairie Sky 855,#92e7ff
+Delft 1101,#4591bd
+Cadet 1058,#2f6292
+Evening 195,#4390d6
+Dresden Blue 1123,#589bc9
+Blueberry 277,#7dc9f2
+Cornflower 27,#9fe0ff
+Blue Bell 1029,#a2d7f1
+Periwinkle 1285,#77c2ff
+Candy Blue 1060,#72baf4
+Malibu 494,#2a89ff
+Harbor 1845,#257af6
+Mediterranean 479,#0e5cdf
+Pacific 90,#0d54ee
+Regatta 346,#0d4bbc
+Prussian 454,#00206b
+Storm 458,#031a3e
+Indigo 1178,#0b1b2a
+Royal 1314,#0026c1
+Blueprint 848,#0743f6
+Surf 32,#0e50f6
+Astra 484,#3c90ff
+Copen 1084,#377fe4
+Blue Jay 196,#71a8ff
+Denim 1452,#568de6
+Deep Blue 1541,#0c25cb
+Ocean 25,#001de7
+Marine 1218,#001ebd
+Riviera 455,#0018bb
+Nightfall 140,#00116f
+Nautical 412,#071436
+Regal 415,#070c77
+Noble Purple 852,#1c21e6
+Lapis 357,#2e4cf0
+Hyacinth 1171,#4167ff
+Grapemist 318,#8db1ff
+Dove 839,#e5faec
+Lighthouse 1847,#cee8da
+Quicksilver 856,#c4dae2
+Iron 408,#aac5c6
+Overcast 854,#94b4af
+Shale 456,#7cb18e
+Titanium,#82a3ae
+Shark 1854,#719aa1
+Slate 1336,#486b99
+Steel 91,#4a636e
+Graphite 295,#49655c
+Metal 106,#405d5d
+Chalkboard 1837,#375967
+Gotham Grey 862,#2c433a
+Charcoal 1071,#202728
+Pepper 359,#162928
+Black 1019,#141a19
+Haze 863,#ecf5ea
+Silver 1333,#e4ebf0
+Shadow 457,#cdd6d3
+Ash 1007,#c8ccc7
+Doeskin 850,#c3c3ad
+Shitake 858,#b6c5b0
+Smoke 1713,#91a28a
+Pewter 1470,#7b8e75
+Zinc 859,#7a8669
+Med. Grey 1223,#667592
+Grizzly 1844,#4d5749
+Coal 1080,#475358
+Otter 1851,#3f3a24
+White 1387,#fafdfe
+PFD Bleached White 1287,#fafdfb
+Snow 1339,#fbfded
+Natural 1242,#fbfbf0
+Bone 1037,#fbfcef
+Oyster 1268,#f6f8df
+Putty 1303,#f0f4c8
+Ivory 1181,#edf0d5
+Sand 1323,#f4e3cf
+Eggshell 184,#feeabf
+Cream 1090,#ffe3b9
+Champagne 1069,#efeab5
+Lingerie 843,#efdad3
+Eucalyptus 841,#d8e89d
+Khaki 1187,#ded7a7
+Tan 1369,#dad19f
+Parchment 413,#c5c6a3
+Limestone 478,#c2c483
+Parsley 198,#b7b962
+Raffia 1306,#cdb384
+Straw 186,#c9ba6f
+Stone 1362,#b8af86
+Latte 492,#b9ac76
+Wheat 1386,#c7a36c
+Sweet Pea 201,#9a9238
+Biscuit 1473,#a18c43
+Cobblestone 486,#9e8964
+Taupe 1371,#9b855d
+Suede 1855,#98826d
+Mushroom 1239,#858659
+Herb 340,#7b7543
+Bison 1017,#665e30
+Earth 138,#6d4c18
+Moss 1238,#554f03
+Sable 275,#5b4822
+Cappuccino 406,#53401f
+Mocha 1237,#553723
+Chestnut 407,#463302
+Chocolate 1073,#382d1d
+Coffee 1083,#302418
+Espresso 1136,#17171c

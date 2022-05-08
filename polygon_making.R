@@ -136,3 +136,17 @@ for (i in seq_len(nrow(grid))) {
          width = width_blocks, height = width_blocks)
 }
 
+# How much fabric? ------
+
+# Added a function to estimate the amount of fabric
+# see functions/calc_needed_fabric.R
+source("functions/calc_needed_fabric.R")
+
+calc_needed_fabric(design = d, scale_factor = 40/30, scale_extra = 1.2)
+# for our first design, a quarter yard (usually you buy a fat quarter) is plenty!
+
+# Can we pick fabric colors? -----
+# grabbed hex codes for two collections of solid quilting fabric that I like.
+# Let's pick from these to make the quilt and replot?
+source("functions/fabric_color_guide.R")
+
