@@ -5,6 +5,8 @@
 
 # Session Data files
 .RData
+tests/*
+to_print/*
 
 # User-specific files
 .Ruserdata

@@ -1,0 +1,81 @@
+#' Pick a location on a line to split
+#'
+#' @param line a tibble of our weird format. See examples.
+#' @param x (optional) if you know the x to split at
+#' if missing, then the function picks a point on the line
+#' @param corners logical, whether or not you can pick a
+#' point on the edge (a corner). Default is TRUE
+#'
+#' @return a vector with an x and y value
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' # This is the expected line input
+#' #   A tibble: 1 × 4
+#' #   section start     stop       line
+#' #   <chr>   <list>    <list>    <int>
+#' # 1 A2      <dbl [2]> <dbl [2]>     6
+#' }
+get_point_on_line <- function(line,
+                              x = NULL,
+                              corners = TRUE) {
+
+  # get line: y = slope * x + intercept
+  slope <- (line$stop[[1]][2] - line$start[[1]][2]) /
+    (line$stop[[1]][1] - line$start[[1]][1])
+  # if Inf => vertical line
+  # if 0 => horizontal line
+  intercept <- line$stop[[1]][2] - slope * line$stop[[1]][1]
+
+  # get a y, given an x
+  if (!is.infinite(slope)) {
+    # check if the input is outside the range
+    xes <- sort(c(line$start[[1]][1], line$stop[[1]][1]))
+    # get an x if NULL
+    # note that sample() is very tricky: sample(10, 1) is same as sample(1:10,1)
+    # there is a lot of fine tuning that could be done here
+    if (is.null(x)) {
+      if (corners) {
+        x <- sample(seq(xes[1], xes[2], length = 5), 1)
+      } else {
+        x <- sample(seq(xes[1], xes[2], length = 5)[c(2:4)], 1)
+      }
+
+    }
+    if (x < xes[1]) {
+      warning("input was outside the line range")
+      x <- xes[1]
+    } else if (x > xes[2]) {
+      warning("input was outside the line range")
+      x <- xes[2]
+    }
+    result <- c(x, slope * x + intercept)
+  }
+  # if the line was vertical, then just pretend the x input is a y
+  if (is.infinite(slope)) {
+    slope <- (line$stop[[1]][1] - line$start[[1]][1]) /
+      (line$stop[[1]][2] - line$start[[1]][2])
+    intercept <- line$stop[[1]][1] - slope * line$stop[[1]][2]
+
+    # check if the input is outside the range
+    yes <- sort(c(line$start[[1]][2], line$stop[[1]][2]))
+    # get an x if NULL
+    if (is.null(x)) {
+      if (corners) {
+        x <- sample(seq(yes[1], yes[2], length = 5), 1)
+      } else {
+        x <- sample(seq(yes[1], yes[2], length = 5)[c(2:4)], 1)
+      }
+    }
+    if (x < yes[1]) {
+      warning("input was outside the line range")
+      x <- yes[1]
+    } else if (x > yes[2]) {
+      warning("input was outside the line range")
+      x <- yes[2]
+    }
+    result <- c(slope * x + intercept, x)
+  }
+  return(result)
+}
