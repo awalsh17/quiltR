@@ -340,7 +340,7 @@ design_init <- tribble(
   "A",      4,    c(dimx, 0), c(0,  0)
 )
 
-fpp_image <- repeated_fpp(design_init, rep = 4)
+fpp_image <- repeated_fpp(design_init, rep = 4, n = 3)
 plot_fpp_block(fpp_image)
 
 # convert design to polygon format we can work with
@@ -372,6 +372,8 @@ new_colors <- new_inpoly %>%
 # Plot the FPP again with this palette
 plot_fpp_block(fpp_image,
                fill_sections = TRUE,
+               show_labels = FALSE,
+               show_lines = FALSE,
                palette = new_colors) +
   scale_y_continuous( trans=scales::reverse_trans()) +
   labs(title = "")

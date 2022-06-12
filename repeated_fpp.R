@@ -38,6 +38,7 @@ repeated_fpp <- function(design, rep = 3, n = 3) {
       mutate(ave_x = mean(x), ave_y = mean(y),
              angle = atan2(y - ave_y, x - ave_x)) %>%
       arrange(angle) %>%
+      rbind(slice(., 1)) %>%
       summarise(area = 0.5 * abs(sum(x*lead(y) - lead(x)*y, na.rm = TRUE))) %>%
       ungroup() %>%
       arrange(desc(area)) %>%
