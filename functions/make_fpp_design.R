@@ -4,7 +4,7 @@
 #' square from (0,0) to (10,10)
 #' @param n the number of lines to add (default is 3)
 #' @param only_valid (default TRUE) only allow piecable designs
-#' @param required_lines (optional) require lines through these points
+#' @param return_plot (default TRUE) whether to return a plot
 #' @param verbose (default FALSE) for debugging
 #'
 #' @return a list with "design", "plot", "fpp_order", and "all_designs"
@@ -12,7 +12,7 @@
 make_fpp_design <- function(initial_design = NULL,
                             n = 3,
                             only_valid = TRUE,
-                            required_lines = NULL,
+                            return_plot = TRUE,
                             verbose = FALSE) {
   all_designs <- list()
   if (is.null(initial_design)) {
@@ -101,8 +101,14 @@ make_fpp_design <- function(initial_design = NULL,
   # get the order
   inc_matrix <- get_fpp_inc_matrix(new_design)
 
+  if (return_plot) {
+    res_plot <- plot_fpp_block(new_design, get_fpp_order(inc_matrix)$order)
+  } else {
+    res_plot <- NULL
+  }
+
   return(list(design = new_design,
               all_designs = all_designs,
               fpp_order = get_fpp_order(inc_matrix)$order,
-              plot = plot_fpp_block(new_design, get_fpp_order(inc_matrix)$order)))
+              plot = res_plot))
 }
