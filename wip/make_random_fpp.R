@@ -7,13 +7,9 @@ library(ggplot2)
 library(HyperG)
 
 # the functions to do this work are sourced
-source("functions/get_point_on_line.R")
-source("functions/split_fpp_section.R")
-source("functions/plot_fpp_block.R")
-source("functions/merge_fpp_lines.R")
-source("functions/get_fpp_order.R")
-source("functions/make_fpp_design.R")
-source("functions/get_fpp_inc_matrix.R")
+fpp_functions <- list.files(path = here::here("functions"),
+                            pattern = "fpp", full.names = TRUE)
+lapply(fpp_functions, source)
 
 set.seed(1001)
 
@@ -31,8 +27,8 @@ section <- "A"
 split_lines <- c(1, 2)
 
 # split_coord <- list(c(0, 5), c(5, 10))
-split_coord <- list(get_point_on_line(design_init[1,], 5),
-                    get_point_on_line(design_init[2,], 5))
+split_coord <- list(get_fpp_point(design_init[1,], 5),
+                    get_fpp_point(design_init[2,], 5))
 
 # example to split the A section
 new_design <- split_fpp_section(design_init,
