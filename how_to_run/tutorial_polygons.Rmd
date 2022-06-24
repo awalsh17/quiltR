@@ -1,0 +1,249 @@
+---
+title: "Polygon Making"
+author: "Alice Walsh"
+date: '2022-06-24'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## The goal
+
+I want to use 2-point perspective to create
+a 2-D projection of 3-D cuboids as a landscape.
+
+## Basic premise
+
+A 3-D cube is just 7 or 9 lines. There is a center vertical line, 
+a line on each side parallel to the center line. These are connected by 
+four lines. Finally, depending on the location of the vanishing points, 
+there are also two lines that define the top and bottom of the cube.
+
+
+## Load packages
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(retistruct) # to get intersection
+
+set.seed(45)
+```
+
+## First try to do this with geom_segment
+
+I wrote a function called `make_new_cube`. This makes a data.frame 
+that represents the 7 or 9 lines we need to make a cube.
+
+```{r}
+source("functions/make_new_cube.R")
+
+make_new_cube(xes = c(2, 4, 5), yes = c(1, 3))
+```
+
+We can use ggplot2 to plot this. Here I used `sample` to introduce some 
+randomness to where the cubes are and how big they are.
+
+All the shapes are just on top of each other. This creates an illusion of depth.
+```{r}
+# can create any n of cubes
+cube <- list()
+for (n in 1:3) {
+  cube[[n]] <- make_new_cube(xes = sort(sample(0:29, 3)),
+                             yes = sort(sample(-10:10, 2)),
+                             vp_scale = 30)
+}
+cube <- dplyr::bind_rows(cube)
+
+# plot
+cube %>%
+  ggplot() +
+  geom_segment(aes(x = x, y = y, xend = xend, yend = yend)) +
+  xlim(c(0,30)) +
+  ylim(c(-10,10)) +
+  theme_void()
+```
+
+## Switch to geom_polygon
+
+`geom_segment` requires these aesthetics:
+
++ x
++ y
++ xend
++ yend
+
+However, we want to make each "face" of the cubes filled with 
+colors. So we need to use a different geom.
+
+`geom_polygon` requires these aesthetics:
+
++ x
++ y
+
+This works like `geom_path`. It "follows" the path from each 
+point to the next and connects them based on a group aesthetic.
+
+I created a new function to make a data.frame that 
+feeds nicely to `geom_polygon`.
+
+```{r}
+source("functions/make_new_poly.R")
+
+poly <- make_new_poly(xes = c(20,40,80),
+                      yes = c(60,80),
+                      horizon_y = 40) 
+head(poly)
+```
+
+Now I can make this into a landscape and plot. 
+The colors are not very interesting.
+
+```{r}
+# add a background poly
+background_poly <- data.frame(
+  x = c(0, 0, 100, 100, 0, 0, 100, 100),
+  y = c(0, 40, 40, 0, 40, 100, 100, 40),
+  id = c(rep("ground", 4), rep("sky", 4)),
+  value = c(rep("ground", 4), rep("sky", 4)))
+# plot the poly
+poly %>%
+  ggplot() +
+  geom_polygon(alpha = 1, aes(x = x, y = y, group = id),
+               fill = c(rep("gray90", 4), rep("lightblue", 4)),
+               data = background_poly, inherit.aes = FALSE) +
+  geom_polygon(aes(x = x, y = y, group = id, fill = value),
+               alpha = 1) +
+  theme_void() +
+  theme(legend.position = "none")
+```
+
+## Create a wrapper to make lots of cubes
+
+Here, I added some defaults for the colors of the faces that 
+create an illusion of a light source where some faces are darker
+(further from the light source) and others are lighter (closer to 
+the light source).
+
+The function can take other colors for customization.
+
+
+```{r}
+source("functions/make_many_polys.R")
+
+d <- make_many_polys(
+  "examples/simple_cubes3.png", # where to write the image as png
+  horizon_y = 60, # where from 0 -100 to put the horizon
+  height_range = 30:40, # range of heights for cubes
+  width_range = 20:50, # range of widths
+  n_cubes = 5, # how many cubes to make
+  n_second_color = 2) # how many to make a second color
+
+head(d)
+```
+
+## What about converting this to a quilting pattern?
+
+Currently, this was all created with an arbitrary field from 
+x = 0 to x = 100 and y = 0 to y = 100.
+
+But I want to scale this to inches and print it out at full scale.
+
+I also created a helper function for that.
+
+```{r}
+source("functions/save_poly_pdf.R")
+
+save_poly_pdf(d = d, filename = "examples/simple_cubes3.pdf")
+```
+
+You can also just save the design object, `d` for future use.
+
+```{r}
+saveRDS(d, "examples/simple_cubes3_data.Rds")
+```
+
+### Create individual blocks
+
+You can print the PDF with tiling using Adobe reader.
+
+Or create blocks by splitting the area into n x n areas and 
+make those each their own page. Below is the code to do this, which 
+I did not wrap into a function because there were a lot of improvements
+to the whole flow I wanted to make first and I was hoping 
+to link this with the foundation paper piecing code.
+
+Currently, this just breaks into horizontal blocks. This has 
+some design features because you could use different colors for the 
+"background" blocks and introduce more visual interest.
+
+However, if this will be paper pieced, then a grid of blocks
+may be sub-optimal as it creates additional seams with joins that 
+could be tricky.
+
+```{r eval=FALSE}
+# where should the individual block pdfs be saved?
+save_location <- "~/pathtosave/"
+
+# How big do you want this to be?
+final_quilt_size <- 40 # units are arbitrary (I think in inches)
+scale_factor <- final_quilt_size / 100 # my image was "100" wide
+width_blocks <- final_quilt_size / 5   # I wanted 5 across, makes nice 8"
+
+# Create a data.frame with the start and end x,y for each block
+grid <- tidyr::crossing(x = seq(0, 32, width_blocks),
+                        y = seq(0, 32, width_blocks)) %>%
+  mutate(x_end = x + width_blocks,
+         y_end = y + width_blocks) %>%
+  arrange(x, y)
+
+# Add in some information that was not in the design created previously
+# This ensures that the paths are "closed" without any open edges
+missing_paths <- d %>% arrange(desc(cube_id))
+# create horizontal line for horizon
+horizontal <- data.frame(cube_id = c("",""),
+                         x = c(0, 100),
+                         y = c(50, 50)) %>%
+  mutate(x = x*scale_factor, y = y*scale_factor)
+
+# run a loop over all blocks, select just that area
+# save a pdf with just that area
+for (i in seq_len(nrow(grid))) {
+  block <- d %>%
+    bind_rows(missing_paths) %>%
+    arrange(cube_id) %>%
+    mutate(x = x*scale_factor, y = y*scale_factor) %>%
+    group_by(id) %>%
+    mutate(ave_x = mean(x), ave_y = mean(y)) %>%
+    ungroup() %>%
+    ggplot() +
+    # horizon line
+    geom_path(aes(x = x, y = y, group = cube_id),
+              data = horizontal,
+              alpha = 1,
+              color = "black",
+              size = 1) +
+    geom_path(aes(x = x, y = y, group = id),
+              alpha = 1,
+              color = "black",
+              size = 2) +
+    geom_polygon(aes(x = x, y = y, group = id),
+                 fill = "white", color = "blue",
+                 size = 0.5,
+                 alpha = 1) +
+    geom_text(aes(label = cube_id, x = ave_x, y = ave_y)) +
+    coord_equal(clip = "off",
+                xlim = c(grid$x[i], grid$x_end[i]),
+                ylim = c(grid$y[i], grid$y_end[i]),
+                expand = FALSE) +
+    theme_void() +
+    theme(legend.position = "none",
+          panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+  ggsave(plot = block,
+         filename = paste0(save_location, i, ".pdf"),
+         width = width_blocks, height = width_blocks)
+}
+```
+
