@@ -8,18 +8,19 @@ This code generates a landscape with a specified number of rectangular polygons.
 
 <img src="examples/simple_cubes2.png" width="1000"/>
 
-See the [tutorial_polygons.Rmd](./tutorial_polygons.Rmd) Rmd and rendered html.
+See the [tutorial_polygons.Rmd](./how_to_run/tutorial_polygons.Rmd) Rmd and rendered html.
 
 ## Random Foundation Paper piecing blocks
 
 This code generates a random FPP pattern including the order to add the sections.
 
-[make_random_fpp.R](./make_random_fpp.R) script.
+[wip/make_random_fpp.R](./wip/make_random_fpp.R) script.
 
 ## Using an image as a starting point
 
 Code to take a photo (or image like an ombre color fade) and separate in to blocks for piecing.
 
+[wip/design_from_image.R](./wip/design_from_image.R) script.
 
 ## Support for creating blocks from a design
 TBA
@@ -39,4 +40,4 @@ Features in progress:
 -   Plan the yardage of each color needed
 -   Complete the other design types (2-point perspective polygons, pixelated image, random FPP)
 -   Allow for hand selection of block shapes and not a uniform grid
--   Add example results
+-   Add example results and document properly, rename things, etc.
