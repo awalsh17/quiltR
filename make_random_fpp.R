@@ -48,7 +48,7 @@ plot_fpp_block(new_design)
 # n times to get a fun design. Use make_fpp_design()
 
 # Basic usage
-test_design <- make_fpp_design(n = 10)
+test_design <- make_fpp_design(n = 5)
 test_design$plot
 # you can also redo the plot with the sections colored
 # using fabrics from kona and art gallery fabrics

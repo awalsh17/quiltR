@@ -59,16 +59,16 @@ poly %>%
   theme(legend.position = "none")
 
 # RUN IT -----
-source("functions/create_pattern_pdf.R")
-source("functions/save_my_image.R")
+source("functions/save_poly_pdf.R")
+source("functions/make_many_polys.R")
 
-d <- save_my_image("tests/simple_cubes3.png",
+d <- make_many_polys("tests/simple_cubes3.png",
                    horizon_y = 80,
                    height_range = 10:40,
                    width_range = 20:80,
                    n_cubes = 3, n_second_color = 1)
 
-create_pattern_pdf(d = d, filename = "tests/simple_cubes3.pdf")
+save_poly_pdf(d = d, filename = "tests/simple_cubes3.pdf")
 
 saveRDS(d, "tests/test_10.Rds")
 

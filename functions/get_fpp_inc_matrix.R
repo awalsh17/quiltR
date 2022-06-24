@@ -1,6 +1,6 @@
 # need to first join the section lines that make one larger
-# design line (they have same formula and overlap)
-# do not remove the duplicate lines across >1 section
+# design line (they have the same formula and overlap)
+# do not remove the duplicate lines across > 1 section
 # use merge_fpp_lines
 
 get_fpp_inc_matrix <- function(design, initial_design = NULL) {
