@@ -6,7 +6,7 @@ Code to design quilts in R. This is work in progress and needs more documentatio
 
 This code generates a landscape with a specified number of rectangular polygons.
 
-<img src="examples/simple_cubes2.png" width="1000"/>
+<img src="./examples/simple_cubes2.png" width="1000"/>
 
 See the [tutorial_polygons.Rmd](./how_to_run/tutorial_polygons.Rmd) Rmd and rendered html.
 
