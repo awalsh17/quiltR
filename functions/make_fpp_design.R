@@ -50,9 +50,9 @@ make_fpp_design <- function(initial_design = NULL,
 
     # if these are adjacent lines, do not use a corner
     split_coord <- list(
-      get_point_on_line(new_design[new_design$line==split_lines[1],],
+      get_fpp_point(new_design[new_design$line==split_lines[1],],
                         corners = !is_adjacent),
-      get_point_on_line(new_design[new_design$line==split_lines[2],],
+      get_fpp_point(new_design[new_design$line==split_lines[2],],
                         corners = !is_adjacent))
 
     # DEBUG verbose

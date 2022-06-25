@@ -17,9 +17,9 @@
 #' #   <chr>   <list>    <list>    <int>
 #' # 1 A2      <dbl [2]> <dbl [2]>     6
 #' }
-get_point_on_line <- function(line,
-                              x = NULL,
-                              corners = TRUE) {
+get_fpp_point <- function(line,
+                          x = NULL,
+                          corners = TRUE) {
 
   # get line: y = slope * x + intercept
   slope <- (line$stop[[1]][2] - line$start[[1]][2]) /
@@ -33,14 +33,8 @@ get_point_on_line <- function(line,
     # check if the input is outside the range
     xes <- sort(c(line$start[[1]][1], line$stop[[1]][1]))
     # get an x if NULL
-    # note that sample() is very tricky: sample(10, 1) is same as sample(1:10,1)
-    # there is a lot of fine tuning that could be done here
     if (is.null(x)) {
-      if (corners) {
-        x <- sample(seq(xes[1], xes[2], length = 5), 1)
-      } else {
-        x <- sample(seq(xes[1], xes[2], length = 5)[c(2:4)], 1)
-      }
+      x <- pick_division_points(xes, corners)
 
     }
     if (x < xes[1]) {
@@ -62,11 +56,7 @@ get_point_on_line <- function(line,
     yes <- sort(c(line$start[[1]][2], line$stop[[1]][2]))
     # get an x if NULL
     if (is.null(x)) {
-      if (corners) {
-        x <- sample(seq(yes[1], yes[2], length = 5), 1)
-      } else {
-        x <- sample(seq(yes[1], yes[2], length = 5)[c(2:4)], 1)
-      }
+      x <- pick_division_points(yes, corners)
     }
     if (x < yes[1]) {
       warning("input was outside the line range")
@@ -78,4 +68,28 @@ get_point_on_line <- function(line,
     result <- c(slope * x + intercept, x)
   }
   return(result)
+}
+
+#' This helper could be modified to add different characteristics
+#' to how the sections are split.
+pick_division_points <- function(xes_or_yes,
+                                 corners) {
+  # first method - splits into 5 pieces
+  # note that sample() is very tricky: sample(10, 1) is same as sample(1:10,1)
+
+  # mychoices <- seq(xes_or_yes[1], xes_or_yes[2], length = 5)
+  # if (corners) {
+  #   x <- sample(mychoices, 1)
+  # } else {
+  #   x <- sample(mychoices[c(2:4)], 1)
+  # }
+  # second method - choose midpoint or corners
+  mychoices <- c(xes_or_yes,
+                 (xes_or_yes[2] + xes_or_yes[1]) / 2)
+  if (corners) {
+    x <- sample(mychoices, 1)
+  } else {
+    x <- mychoices[3]
+  }
+  return(x)
 }

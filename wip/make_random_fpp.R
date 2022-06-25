@@ -45,7 +45,8 @@ plot_fpp_block(new_design)
 
 # Basic usage
 test_design <- make_fpp_design(n = 5)
-test_design$plot
+test_design$plot + labs(title = "A random FPP")
+
 # you can also redo the plot with the sections colored
 # using fabrics from kona and art gallery fabrics
 fabrics <- readRDS("colors/annotated_fabric_colors.Rds")

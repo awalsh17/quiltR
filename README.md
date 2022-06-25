@@ -6,13 +6,17 @@ Code to design quilts in R. This is work in progress and needs more documentatio
 
 This code generates a landscape with a specified number of rectangular polygons.
 
-<img src="./examples/simple_cubes2.png" width="1000"/>
+<img src="./examples/simple_cubes2.png" width="500"/>
 
 See the [tutorial_polygons.Rmd](./how_to_run/tutorial_polygons.Rmd) Rmd and rendered html.
 
 ## Random Foundation Paper piecing blocks
 
-This code generates a random FPP pattern including the order to add the sections.
+This code generates random foundation paper piecing (FPP) patterns
+including the order to add the sections. Can use any starting shape
+and be run recursively to create a large design with smaller blocks.
+
+<img src="./examples/random_fpp_design.png" width="500"/>
 
 [wip/make_random_fpp.R](./wip/make_random_fpp.R) script.
 
