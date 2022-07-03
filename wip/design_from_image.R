@@ -11,7 +11,7 @@ library(imager)
 
 # Load an image:
 # this loads as cimg object
-my_image <- load.image("tests/R_logo.png")
+my_image <- load.image(here::here("examples/R_logo.png"))
 plot(my_image)
 
 # For what I a doing, I don't need a full size image
@@ -66,7 +66,8 @@ ggplot(image_reduced, aes(x_group, y_group)) + geom_raster(aes(fill = rgb)) +
   coord_equal() +
   scale_fill_identity() +
   scale_y_continuous(expand=c(0,0), trans=scales::reverse_trans()) +
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  theme_void()
 
 # Now what about for an irregular shape to average over? Need to get all the pixels
 # in a weird shape (please dont make me use shapefiles!)
@@ -103,7 +104,6 @@ ggplot(image_reduced_selection, aes(x, y)) +
 
 # Try with a design we make with the FPP generator
 sapply(list.files("functions", pattern = "_fpp_", full.names = TRUE), source)
-source("functions/get_point_on_line.R")
 
 # get the image dimensions
 dimx <- dim(my_image)[1]
@@ -208,7 +208,8 @@ fpp_image <- image_df %>%
   group_by(x_group, y_group) %>%
   tidyr::nest() %>%
   mutate(section_base = section_letters[cur_group_id()]) %>%
-  mutate(fpp_design = purrr::map(data, ~make_block(.x, section_id = section_base)))
+  mutate(fpp_design = purrr::map(data,
+                                 ~make_block(.x, section_id = section_base)))
 
 # get the polygon data, make into one big data.frame
 all_poly <- fpp_image %>%
@@ -243,7 +244,7 @@ plot_fpp_block(big_design,
   scale_y_continuous( trans=scales::reverse_trans()) +
   labs(title = "")
 
-ggsave("examples/r_logo_fpp.pdf")
+ggsave("examples/r_logo_fpp_v2.pdf")
 
 # Ok - that took forever
 # lets try another image
@@ -340,8 +341,15 @@ design_init <- tribble(
   "A",      4,    c(dimx, 0), c(0,  0)
 )
 
-fpp_image <- repeated_fpp(design_init, rep = 4, n = 3)
+source(here::here("functions/repeated_fpp.R"))
+# needs de-bug, get error sometimes in inc_matrix
+# area calculation is wrong. sometimes they increase
+# or we are creating invalid shapes
+fpp_image <- repeated_fpp(design_init, rep = 15, n = 2)
 plot_fpp_block(fpp_image)
+
+# to get the number of sections:
+n_distinct(fpp_image$section)
 
 # convert design to polygon format we can work with
 new_design <- fpp_image %>%
@@ -378,4 +386,4 @@ plot_fpp_block(fpp_image,
   scale_y_continuous( trans=scales::reverse_trans()) +
   labs(title = "")
 
-ggsave("examples/my_photo-fpp3.pdf")
+ggsave("examples/repeated_fpp_rlogo.pdf")

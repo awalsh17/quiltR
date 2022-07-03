@@ -44,7 +44,7 @@ plot_fpp_block(new_design)
 # n times to get a fun design. Use make_fpp_design()
 
 # Basic usage
-test_design <- make_fpp_design(n = 5)
+test_design <- make_fpp_design(n = 4, method = "golden")
 test_design$plot + labs(title = "A random FPP")
 
 # you can also redo the plot with the sections colored
@@ -65,7 +65,7 @@ triangle_init <- tribble(
 plot_fpp_block(triangle_init)
 # use this as the initial shape
 test_design <- make_fpp_design(initial_design = triangle_init,
-                               n = 5)
+                               n = 4)
 test_design$plot
 # replot with random colors
 plot_fpp_block(test_design$design,
@@ -90,12 +90,12 @@ plot(hype2)
 # completely covered by the lines
 # 3: could change around the splitting to avoid tiny areas
 
-
-# version with required_lines idea
-# required_test <- tribble(
-#   ~section, ~line, ~start,  ~stop,
-#   "A",      1,    c(0,  0), c(5, 10),
-#   "A",      2,    c(5, 10), c(10, 0)
-# )
-#
-# test_design <- make_fpp_design(n = 4, required_lines = required_test)
+# print 30 blocks for making a quilt
+# repeat 30 x
+out_dir <- "~/Downloads/quilt_rand_mid/"
+for (b in 1:30) {
+  n_b <- sample(c(3:5), 1)
+  block_b <- make_fpp_design(n = n_b, method = "midpoint")
+  ggsave(block_b$plot + labs(title = NULL),
+         filename = paste0(out_dir, "block", b, ".pdf"))
+}

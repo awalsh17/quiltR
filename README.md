@@ -20,17 +20,27 @@ and be run recursively to create a large design with smaller blocks.
 
 [wip/make_random_fpp.R](./wip/make_random_fpp.R) script.
 
+I also started some code that takes some design features as input.
+For example, if you have an input shape, you can generate the pattern 
+to match it.
+
+[wip/make_constrained_fpp.R](./wip/make_constrained_fpp.R) script.
+
 ## Using an image as a starting point
 
 Code to take a photo (or image like an ombre color fade) and separate in to blocks for piecing.
 
 [wip/design_from_image.R](./wip/design_from_image.R) script.
 
-## Support for creating blocks from a design
-TBA
+## Support for splitting a design into blocks
+
+For one example, see the [tutorial_polygons.Rmd](./how_to_run/tutorial_polygons.Rmd) section on creating
+individual blocks.
 
 ## Support for choosing colors
-TBA
+
+This is a work in progress. Some data on the colors available in Kona cotton
+or Art Gallery Fabrics is in [colors]("./colors").
 
 ## Notes
 

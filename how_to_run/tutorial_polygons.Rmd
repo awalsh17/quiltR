@@ -111,8 +111,9 @@ background_poly <- data.frame(
 # plot the poly
 poly %>%
   ggplot() +
-  geom_polygon(alpha = 1, aes(x = x, y = y, group = id),
+  geom_polygon(aes(x = x, y = y, group = id),
                fill = c(rep("gray90", 4), rep("lightblue", 4)),
+               alpha = 1, 
                data = background_poly, inherit.aes = FALSE) +
   geom_polygon(aes(x = x, y = y, group = id, fill = value),
                alpha = 1) +

@@ -22,17 +22,36 @@ plot_fpp_block <- function(design,
                            show_labels = TRUE,
                            show_lines = TRUE) {
 
+  # Test if already wide
+  if ("start_x" %in% names(design)) {
+    wide <- TRUE
+  } else {
+    wide <- FALSE
+  }
   # Get the centroids of each section
-  centers <- design %>%
-    distinct(section, line, .keep_all = TRUE) %>%
-    tidyr::unnest(c(start, stop)) %>%
-    mutate(pos = rep(c("x", "y"), n()/2)) %>%
-    tidyr::pivot_longer(cols = c("start", "stop")) %>%
-    tidyr::pivot_wider(names_from = pos, values_from = value) %>%
-    group_by(section) %>%
-    summarise(ave_x = mean(x),
-              ave_y = mean(y),
-              .groups = "drop")
+  if (wide) {
+    centers <- design %>%
+      distinct(section, line, .keep_all = TRUE) %>%
+      tidyr::pivot_longer(cols = start_x:stop_y,
+                          names_to = c("name", ".value"),
+                          names_pattern = "(.*)_(.)") %>%
+      group_by(section) %>%
+      summarise(ave_x = mean(x),
+                ave_y = mean(y),
+                .groups = "drop")
+  } else {
+    centers <- design %>%
+      distinct(section, line, .keep_all = TRUE) %>%
+      tidyr::unnest(c(start, stop)) %>%
+      mutate(pos = rep(c("x", "y"), n()/2)) %>%
+      tidyr::pivot_longer(cols = c("start", "stop")) %>%
+      tidyr::pivot_wider(names_from = pos, values_from = value) %>%
+      group_by(section) %>%
+      summarise(ave_x = mean(x),
+                ave_y = mean(y),
+                .groups = "drop")
+  }
+
 
   # if section order provided, rename sections with the order
   if (!is.null(section_order)) {
@@ -45,11 +64,16 @@ plot_fpp_block <- function(design,
   # if no fill, make the plot
   if (!fill_sections) {
     # Plot
-    final_plot <- design %>%
-      distinct(section, line, .keep_all = TRUE) %>%
-      tidyr::unnest(c(start, stop)) %>%
-      mutate(pos = rep(c("x", "y"), n()/2)) %>%
-      tidyr::pivot_wider(names_from = pos, values_from = c(start, stop)) %>%
+    if (!wide) {
+      design_wide <- design %>%
+        distinct(section, line, .keep_all = TRUE) %>%
+        tidyr::unnest(c(start, stop)) %>%
+        mutate(pos = rep(c("x", "y"), n()/2)) %>%
+        tidyr::pivot_wider(names_from = pos, values_from = c(start, stop))
+    } else {
+      design_wide <- design
+    }
+    final_plot <- design_wide %>%
       ggplot(aes(x = start_x, xend = stop_x, y = start_y, yend = stop_y)) +
       geom_segment(aes(color = section)) +
       labs(x = "x", y = "y", title = "The design") +
@@ -65,18 +89,33 @@ plot_fpp_block <- function(design,
   } else {
     # if yes to fill, make the plot
     # need to reorder for geom_path and geom_polygon
-    reshape_design <- design %>%
-      distinct(section, line, .keep_all = TRUE) %>%
-      tidyr::unnest(c(start, stop)) %>%
-      mutate(pos = rep(c("x", "y"), n()/2)) %>%
-      tidyr::pivot_longer(cols = c(start, stop)) %>%
-      tidyr::pivot_wider(names_from = pos, values_from = value) %>%
-      distinct(section, x, y) %>%
-      group_by(section) %>%
-      mutate(ave_x = mean(x), ave_y = mean(y),
-             angle = atan2(y - ave_y, x - ave_x)) %>%
-      arrange(angle) %>%
-      ungroup()
+    if (wide) {
+      reshape_design <- design %>%
+        distinct(section, line, .keep_all = TRUE) %>%
+        tidyr::pivot_longer(cols = start_x:stop_y,
+                            names_to = c("name", ".value"),
+                            names_pattern = "(.*)_(.)") %>%
+        distinct(section, x, y) %>%
+        group_by(section) %>%
+        mutate(ave_x = mean(x), ave_y = mean(y),
+               angle = atan2(y - ave_y, x - ave_x)) %>%
+        arrange(angle) %>%
+        ungroup()
+    } else {
+      reshape_design <- design %>%
+        distinct(section, line, .keep_all = TRUE) %>%
+        tidyr::unnest(c(start, stop)) %>%
+        mutate(pos = rep(c("x", "y"), n()/2)) %>%
+        tidyr::pivot_longer(cols = c(start, stop)) %>%
+        tidyr::pivot_wider(names_from = pos, values_from = value) %>%
+        distinct(section, x, y) %>%
+        group_by(section) %>%
+        mutate(ave_x = mean(x), ave_y = mean(y),
+               angle = atan2(y - ave_y, x - ave_x)) %>%
+        arrange(angle) %>%
+        ungroup()
+    }
+
 
     final_plot <- reshape_design %>%
       ggplot() +
@@ -104,7 +143,8 @@ plot_fpp_block <- function(design,
           scale_fill_manual(values = palette_vector)
       } else {
         palette <- cbind(centers,
-                         palette[sample(1:nrow(palette), nrow(centers)),])
+                         palette[sample(1:nrow(palette), nrow(centers),
+                                        replace = TRUE),])
         final_plot <- final_plot +
           scale_fill_manual(values = palette$color) +
           geom_text(aes(label = fabric_name, x = ave_x, y = ave_y),

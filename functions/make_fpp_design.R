@@ -13,7 +13,7 @@ make_fpp_design <- function(initial_design = NULL,
                             n = 3,
                             only_valid = TRUE,
                             return_plot = TRUE,
-                            verbose = FALSE) {
+                            verbose = FALSE, ...) {
   all_designs <- list()
   if (is.null(initial_design)) {
     new_design <- tribble(
@@ -51,9 +51,9 @@ make_fpp_design <- function(initial_design = NULL,
     # if these are adjacent lines, do not use a corner
     split_coord <- list(
       get_fpp_point(new_design[new_design$line==split_lines[1],],
-                        corners = !is_adjacent),
+                        corners = !is_adjacent, ...),
       get_fpp_point(new_design[new_design$line==split_lines[2],],
-                        corners = !is_adjacent))
+                        corners = !is_adjacent, ...))
 
     # DEBUG verbose
     if (verbose) {

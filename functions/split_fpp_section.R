@@ -1,6 +1,6 @@
 #' Create new lines and new sections
 #' Note that if the new line does not create any new area
-#' then we dont make the changes
+#' then we don't make the changes
 #' @param design a tibble of my weird format: section,
 #' start, stop, line
 #' @param split_section a character with the section in
@@ -11,9 +11,9 @@
 #' on split_lines to connect. Use get_point_on_line()
 #' to get these
 split_fpp_section <- function(design,
-                          split_section,
-                          split_lines,
-                          split_coord) {
+                              split_section,
+                              split_lines,
+                              split_coord) {
 
   design_initial <- design
   design_old <- design[design$section != split_section, ]
