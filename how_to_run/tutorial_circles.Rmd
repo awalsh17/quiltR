@@ -1,0 +1,237 @@
+---
+title: "Overlapping circles"
+author: "Alice Walsh"
+date: '2022-06-24'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## The goal
+
+This quilt design is based off the pattern [Exploring Curves](https://www.cottonandbourbon.com/quilt-patterns/exploring-curves) by
+Audrey Esarey. 
+
+My goal is to create a large queen sized quilt that is approximately 
+88 inches by 94 inches. I will do this by combining 4 panels with the 
+overlapping circles separated by sashing.
+
+## Basic premise
+
+It is fairly simple to create a design with overlapping transparent points
+with ggplot2. So this will be a great use of R.
+
+Then to construct the quilt, this will also be relatively painless!
+
+## Notes
+
+This current implementation is simple. The downside is that I don't
+have great control over the circle size and so there is some trial and
+error to get a good design. Still fun!
+
+## Load packages
+
+```{r}
+library(dplyr)
+library(ggplot2)
+set.seed(95)
+```
+
+## Set up
+
+I specify some parameters around the size of each panel to get the 
+desired aspect ratio.
+
+I also set a fixed relative sizing for the circles based on my 
+preferences
+
+```{r}
+final_size <- c(36, 39)
+
+xlim <- c(0, 10*final_size[1]/final_size[2])
+ylim <- c(0, 10)
+
+size_dist <- c(2, 2.5, 4, 5) # circle relative sizes
+
+circle_colors <- c("a" = "red",
+                   "b" = "lightblue",
+                   "c" = "pink",
+                   "d" = "navy")
+```
+
+## Make one design
+
+Create a data.frame `circles` that specifies the x, y coordinates of 
+each circle. I chose to have the circles near the edges of the 
+coordinate space, because I want them mostly to overlap the edges.
+
+This is for two reasons. First because it will be easier to construct the 
+quilt. And second, because I think it looks cool.
+
+```{r}
+circles <- data.frame(
+  x = sample(c(0.5:3, 6:(xlim[2]-0.5)), 4),
+  y = sample(c(0.5:3, 7:9.5), 4),
+  size = size_dist,
+  color = c("a", "b", "c", "d")
+)
+```
+
+Now, I use {ggplot2} to make the plot. Note that I am not that
+choosy about the colors here. I am going to print this in black and white.
+
+The size range for `scale_size` was fine tuned arbitrarily to make something I liked.
+
+```{r}
+circles %>%
+  ggplot(aes(x = x, y = y, color = color, size = size)) +
+  geom_point(shape = 19, alpha = 0.2) +
+  geom_point(shape = 1, color = "gray50") +
+  scale_size(range = c(50, 90)) +
+  scale_color_manual(values = circle_colors) +
+  coord_equal(xlim = xlim, ylim = ylim, expand = F) +
+  theme_void() +
+  theme(legend.position = "none", panel.border = element_rect(fill = NA))
+```
+
+## Make many designs
+
+Now I just run a loop and write out pdfs with `ggsave`. I do this 
+because I can now print this with tiling from Adobe Reader or I could
+send it to a printer with larger poster printing.
+
+Note that I write these out at 1x scale. So I need to change the 
+`scale_size` range. Again, I just manually set these to something I liked
+with some trial and error.
+
+```{r eval=FALSE}
+# where to save
+save_path <- "~/Downloads/quilt_circles/"
+for (b in 1:5) {
+  circles <- data.frame(
+    x = sample(c(0.5:3, 6:(xlim[2]-0.5)), 4),
+    y = sample(c(0.5:3, 7:9.5), 4),
+    size = size_dist,
+    color = c("a", "b", "c", "d")
+  )
+  
+  circles %>%
+    ggplot(aes(x = x, y = y, color = color, size = size)) +
+    geom_point(shape = 19, alpha = 0.2) +
+    geom_point(shape = 1, color = "gray50") +
+    scale_size(range = c(50*10, 90*10)) +
+    scale_color_manual(values = c("a" = "red",
+                                  "b" = "lightblue",
+                                  "c" = "pink",
+                                  "d" = "navy")) +
+    coord_equal(xlim = xlim, ylim = ylim, expand = F) +
+    theme_void() +
+    theme(legend.position = "none", panel.border = element_rect(fill = NA))
+  
+  # when you print - make a pdf these dimensions
+  ggsave(paste0(save_path, "circles_", b, ".pdf"),
+         width = final_size[1], height = final_size[2])
+}
+```
+
+## Can we calculate the fabric needed?
+
+One challenge for a big quilt like this is knowing how much fabric to buy.
+
+In some other code in this repo, I calculated areas for polygons and then 
+used that. Here I need to try to get the areas of the points from the
+ggplot2 object.
+
+`ggplot_build()` is a useful function! I can return the "size" for each
+point (before they are clipped by the side of the plot).
+
+
+```{r}
+plot_obj <- circles %>%
+  ggplot(aes(x = x, y = y, color = color, size = size)) +
+  geom_point(shape = 19, alpha = 0.2) +
+  geom_point(shape = 1, color = "gray50") +
+  scale_size(range = c(50, 90)) +
+  scale_color_manual(values = circle_colors) +
+  coord_equal(xlim = xlim, ylim = ylim, expand = F) +
+  theme_void() +
+  theme(legend.position = "none", panel.border = element_rect(fill = NA))
+
+ggplot_build(plot_obj)$data[[1]]
+```
+
+Now I need to adjust for the part of the circle that is cropped, calculate
+the area of each intersection, and add extra for the seams.
+
+But first, I need to understand the units. For "size" here, we scaled the area.
+But the units are hard to convert to inches. Are they points? See the 
+[documentation](https://ggplot2.tidyverse.org/reference/scale_size.html).
+
+I created a conversion factor by writing a file with known sizes and measuring.
+My measurements found that actually, the size was the diameter * 33.33.
+
++ size 50 = 1.767 in^2 (1.5 in diameter)
++ size 100 = 7.07 in^2 (3 in diameter)
++ size 500 = 176.7 in^2
++ size 900 = 572.6 in^2
+
+```{r eval=FALSE}
+# This is how I wrote a single circle to a pdf to measure it.
+data.frame(x = 0.5, y = 0.5, size = 5, color = "a") %>% 
+  ggplot(aes(x = x, y = y, color = color, size = size)) +
+  geom_point(shape = 19, alpha = 0.2) +
+  geom_point(shape = 1, color = "gray50") +
+  scale_size(range = c(100, 100)) +
+  scale_color_manual(values = circle_colors) +
+  coord_equal(xlim = c(0, 1), ylim = c(0, 1), expand = F) +
+  theme_void() +
+  theme(legend.position = "none", panel.border = element_rect(fill = NA))
+ggsave("~/Downloads/test_4.pdf", width = 4, height = 4)
+```
+
+Now, I will just use a conservative estimate for the four main fabrics. 
+
++ Let's assume that there are 2 size 900 circles and 2 size 500 circles. That would be about 1500 in^2. 
++ If we assume a fabric bolt has 42 inches of usable width, then that is 35.7 inches or 
+about 1 yard. 
++ For the 6 secondary color fabrics, I will just assume a half-yard is enough.
+
+Finally, for the background fabric, I need 3735 in^2 total. We can round this
+up to 3.5 yards.
+
++ 6 in wide x 88 in long for the three verticals
++ 6 in wide x 88 in long for two (top/bottom) horizontals
++ 6 in wide x 82.5 in long for center horizontal
++ some amount for the 4 blocks with circles (estimate 600 in^2)
+
+To restate these estimates:
+
++ 3.5 yds background
++ 1 yd each of 4 main fabrics
++ 0.5 yd each of 6 secondary fabrics
+
+This comes to a total of 10.5 yds. A quick Google search suggested
+that 8 yds is typical, so I think this is probably not a terrible estimate.
+
+## Can we pick colors?
+
+Here we need a decent number of colors. Honestly, I plan to use fewer unique
+colors by using the same colors multiple times.
+
+How many colors? 14 unique colors.
+
++ 4 colors for the main circles
++ 6 (4 choose 2) for the intersections of two circles
++ 4 (4 choose 3) for the intersections of three circles
++ I will avoid cases when all four circles intersect
+
+Using R to match the colors to fabric colors might be challenging.
+The data above has the colors (which I could use hex instead) for each point, 
+but not for the intersections.
+I could extract the colors from the exported pdf using Illustrator or other
+tools.
+
+I think this will actually be much better to improv a bit based on what
+looks good in real light when making the quilt.

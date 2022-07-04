@@ -2,13 +2,17 @@
 
 Code to design quilts in R. This is work in progress and needs more documentation.
 
+## Slides from RStudio::conf 2022 talk
+
+To be added.
+
 ## 2-point perspective polygons
 
 This code generates a landscape with a specified number of rectangular polygons.
 
 <img src="./examples/simple_cubes2.png" width="500"/>
 
-See the [tutorial_polygons.Rmd](./how_to_run/tutorial_polygons.Rmd) Rmd and rendered html.
+See the [tutorial_polygons.Rmd](./how_to_run/tutorial_polygons.Rmd) Rmd and associated html.
 
 ## Random Foundation Paper piecing blocks
 
@@ -25,6 +29,14 @@ For example, if you have an input shape, you can generate the pattern
 to match it.
 
 [wip/make_constrained_fpp.R](./wip/make_constrained_fpp.R) script.
+
+## Overlapping circles quilt
+
+This code is relatively simple. It generates images with intersecting
+circles just using ggplot2. The [tutorial_circles.Rmd](./how_to_run/tutorial_circles.Rmd) 
+Rmd and associated html walk through my logic and estimates for fabric needed, etc.
+
+<img src="./examples/example_circles.png" width="500"/>
 
 ## Using an image as a starting point
 
