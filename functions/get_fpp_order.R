@@ -1,6 +1,6 @@
 #' Get the order to add the pieces
 #'
-#' @param inc_matrix
+#' @param inc_matrix incidence matrix of a hypergraph
 #'
 #' @return a list with "valid" logical and "order" named vector
 #' @export
@@ -11,7 +11,10 @@ get_fpp_order <- function(inc_matrix) {
   current_graph <- inc_matrix
   # Need to error if the inc_matrix has no sections
   # this would happen if no lines were added to the design
-  if (ncol(inc_matrix) < 1 | is.null(ncol(inc_matrix))) {
+  if (is.null(ncol(inc_matrix))) {
+    is_valid <- FALSE
+    section_order <- colnames(inc_matrix)
+  } else if (ncol(inc_matrix) == 0) {
     is_valid <- FALSE
     section_order <- colnames(inc_matrix)
   } else {

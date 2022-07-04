@@ -14,9 +14,10 @@ repeated_fpp <- function(design, rep = 3, n = 3) {
   prev_design <- design %>% mutate(fpp_order = 1)
   section_areas <- design
   for (i in seq_len(rep)) {
-
+    orig_sections <- setNames(unique(section_areas$section),
+                              unique(section_areas$section))
     new_design <- lapply(
-      unique(section_areas$section),
+      orig_sections,
       function(j) {
         temp_design <- make_fpp_design(
           n = n,
@@ -30,16 +31,20 @@ repeated_fpp <- function(design, rep = 3, n = 3) {
                                    value = "fpp_order"),
                    by = c("section")))
       }
-    ) %>% bind_rows() %>%
+    ) %>% bind_rows(.id = "orig_section")
+    # rename the sections in the newly created sections
+    new_design <- new_design %>%
+      mutate(section = paste0(
+        orig_section, i, ".", fpp_order)
+        ) %>%
+      select(-orig_section)
+    # merge with the rest of the design not split
+    new_design <- new_design %>%
       rbind(prev_design %>%
               filter(!section %in% unique(section_areas$section)))
 
-    # rename the sections so we can tell them apart
-    # calc section sizes - only split the biggest
-    prev_design <- new_design %>%
-      group_by(section) %>%
-      mutate(section = section_names[cur_group_id()]) %>%
-      ungroup()
+    # this is now prev_design
+    prev_design <- new_design
 
     section_areas <- prev_design %>%
       distinct(section, line, .keep_all = TRUE) %>%
@@ -63,9 +68,6 @@ repeated_fpp <- function(design, rep = 3, n = 3) {
     print(paste("sections to split:", distinct(section_areas,
                                                section, area)))
   }
-  return(new_design %>%
-           mutate(section = paste(stringr::str_extract(section, "[A-Za-z]"),
-                                  fpp_order, sep = "-") )
-  )
+  return(new_design)
 }
 

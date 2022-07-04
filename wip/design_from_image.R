@@ -16,16 +16,16 @@ plot(my_image)
 
 # For what I a doing, I don't need a full size image
 # Let's make it smaller and easier to work with
-my_image <- imresize(my_image, 0.25)
+my_image <- imresize(my_image, 0.1)
 
 # convert to a data.frame
 # note that here transparent was black, but I made it white
 image_to_df <- function(image) {
   as.data.frame(my_image, wide = "c") %>%
     dplyr::mutate(
-      c.1 = ifelse(c.4 == 0, 1, c.1),
-      c.2 = ifelse(c.4 == 0, 1, c.2),
-      c.3 = ifelse(c.4 == 0, 1, c.3),
+      c.1 = ifelse(c.4 < 0.5, 1, c.1),
+      c.2 = ifelse(c.4 < 0.5, 1, c.2),
+      c.3 = ifelse(c.4 < 0.5, 1, c.3),
       rgb = rgb(c.1,c.2,c.3))
 }
 
@@ -70,7 +70,7 @@ ggplot(image_reduced, aes(x_group, y_group)) + geom_raster(aes(fill = rgb)) +
   theme_void()
 
 # Now what about for an irregular shape to average over? Need to get all the pixels
-# in a weird shape (please dont make me use shapefiles!)
+# in a weird shape (please don't make me use shapefiles!)
 
 library(secr) # lots of dependencies
 
@@ -108,6 +108,7 @@ sapply(list.files("functions", pattern = "_fpp_", full.names = TRUE), source)
 # get the image dimensions
 dimx <- dim(my_image)[1]
 dimy <- dim(my_image)[2]
+# make the initial design
 design_init <- tribble(
   ~section, ~line, ~start,  ~stop,
   "A",      1,    c(0,  0), c(0, dimy),
@@ -115,11 +116,11 @@ design_init <- tribble(
   "A",      3,    c(dimx,dimy), c(dimx, 0),
   "A",      4,    c(dimx, 0), c(0,  0)
 )
-test_design <- make_fpp_design(n = 5, design_init)
-test_design$plot
+basic_design <- make_fpp_design(n = 5, design_init)
+basic_design$plot
 
 # convert design to polygon format we can work with
-new_design <- test_design$design %>%
+new_design <- basic_design$design %>%
   tidyr::unnest(c(start, stop)) %>%
   mutate(pos = rep(c("x", "y"), n()/2)) %>%
   tidyr::pivot_longer(cols = c(start, stop)) %>%
@@ -156,8 +157,9 @@ new_colors <- new_inpoly %>%
   select(section, R = c.1, G = c.2, B = c.3, color = rgb)
 
 # Plot the FPP again with this palette
-plot_fpp_block(test_design$design,
-               test_design$fpp_order,
+plot_fpp_block(basic_design$design,
+               section_order = basic_design$fpp_order,
+               show_labels = TRUE,
                fill_sections = TRUE,
                palette = new_colors)
 # the result is a FPP block with the colors inspired by the image
@@ -333,20 +335,29 @@ ggsave("examples/my_photo-fpp2.pdf")
 # get the image dimensions
 dimx <- dim(my_image)[1]
 dimy <- dim(my_image)[2]
+# make an initial design. here you could start with better input
 design_init <- tribble(
   ~section, ~line, ~start,  ~stop,
-  "A",      1,    c(0,  0), c(0, dimy),
-  "A",      2,    c(0, dimy), c(dimx,dimy),
-  "A",      3,    c(dimx,dimy), c(dimx, 0),
-  "A",      4,    c(dimx, 0), c(0,  0)
+  "A",      1,    c(0,  37), c(0, dimy),
+  "A",      2,    c(0, dimy), c(90,dimy),
+  "A",      3,    c(90,dimy), c(90, 37),
+  "A",      4,    c(90, 37), c(0,  37),
+  "B",      1,    c(90,  37), c(90, dimy),
+  "B",      2,    c(90, dimy), c(dimx,dimy),
+  "B",      3,    c(dimx,dimy), c(dimx, 37),
+  "B",      4,    c(dimx, 37), c(90,  37),
+  "C",      1,    c(0,  0), c(0, 37),
+  "C",      2,    c(0, 37), c(dimx,37),
+  "C",      3,    c(dimx,37), c(dimx, 0),
+  "C",      4,    c(dimx, 0), c(0,  0)
 )
 
 source(here::here("functions/repeated_fpp.R"))
-# needs de-bug, get error sometimes in inc_matrix
-# area calculation is wrong. sometimes they increase
-# or we are creating invalid shapes
-fpp_image <- repeated_fpp(design_init, rep = 15, n = 2)
-plot_fpp_block(fpp_image)
+# needs de-bug
+# may be creating invalid shapes because of bad section naming
+# may be calculating area wrong
+fpp_image <- repeated_fpp(design_init, rep = 30, n = 2)
+plot_fpp_block(fpp_image, show_labels = F)
 
 # to get the number of sections:
 n_distinct(fpp_image$section)

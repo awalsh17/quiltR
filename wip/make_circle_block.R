@@ -1,7 +1,9 @@
 # make 4 panels that are 36 in wide by 39 high
 library(dplyr)
+library(ggplot2)
 
 # current issues: need better control over point size
+# so we should have these be actual poly? not points?
 
 final_size <- c(36, 39)
 
@@ -21,7 +23,7 @@ for (b in 1:5) {
     ggplot(aes(x = x, y = y, color = color, size = size)) +
     geom_point(shape = 19, alpha = 0.2) +
     geom_point(shape = 1, color = "gray50") +
-    scale_size(range = c(50*12, 90*13)) +
+    scale_size(range = c(50*10, 90*10)) +
     scale_color_manual(values = c("a" = "red",
                                   "b" = "lightblue",
                                   "c" = "pink",

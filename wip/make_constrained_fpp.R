@@ -165,12 +165,21 @@ sections_with_lines <- function(design, line_to_add) {
   # hack - add mid point on line
   xy <- xy %>%
     add_row(x = mean(xy$x), y = mean(xy$y))
-  #
+  # pointsInPolygon will also not do what we need
+  # when the line is completely parallel to section line
+  on_point <- tidyr::crossing(name = xy$name, test_poly) %>%
+    left_join(xy, by = "name") %>%
+    mutate(on_section = near(x.x, x.y) & near(y.x, y.y)) %>%
+    distinct(section = section.x, value = on_section)
+  # Need to handle this correctly. Not correct now
+
   res <- sapply(setNames(unique(test_poly$section), unique(test_poly$section)),
                 function(sec) {secr::pointsInPolygon(
                   xy[,c("x","y")],
                   filter(test_poly, section == sec)[,c("x","y")])}
   ) %>% apply(., 2, any) %>% tibble::enframe(name = "section")
+
+  res <- rbind(res, on_point)
   return(res)
 }
 
@@ -207,9 +216,9 @@ for (x in seq_len(nrow(design_lines))) {
                                    design_lines[x,])
 }
 plot_fpp_block(new_design)
+# note that this worked because the lines to add were in the correct order!
 
-
-#
+# what about if we want to rotate a block?
 rotate_design <- function(design, alpha = 0.5*pi) {
   design <- distinct(design, section, line, .keep_all = TRUE) %>%
     tidyr::pivot_longer(cols = start_x:stop_y,
@@ -235,7 +244,7 @@ rotate_design <- function(design, alpha = 0.5*pi) {
 }
 
 
-# make 25 blocks with random starting order of lines
+# make 25 blocks with random starting order of lines?
 # can also rotate the "design_lines"
 
 rotate_options <- c(pi, 0.5*pi, 1.5*pi)
@@ -300,3 +309,27 @@ big_design <- rbind(blocks[[1]],
 plot_fpp_block(big_design,
                fill_sections = TRUE,
                palette = fabrics %>% filter(lum > 0.5, B > 0.9))
+
+# Now that we have played with this shape, could
+# I force R to make the R logo?
+# had thought about shiny or js to input hand drawn
+design_lines <- tribble(
+  ~section, ~line, ~start_x, ~start_y,  ~stop_x, ~stop_y,
+  "req",      5,    4, 1, 4, 8,
+  "req",      7,    4, 8, 5, 8,
+  "req",      8,    5, 1, 5, 8,
+  "req",      9,    5, 7, 6, 7,
+  "req",      6,    5, 6, 6, 6
+)
+# currently breaks if you split a line that is completely
+# parallel to the section lines
+new_design <- design_init
+for (x in seq_len(nrow(design_lines))) {
+  section_to_split <- sections_with_lines(new_design, design_lines[x,]) %>%
+    filter(value) %>% head(1) %>% pull(section)
+
+  new_design <- split_fpp_section2(new_design,
+                                   section_to_split,
+                                   design_lines[x,])
+}
+plot_fpp_block(new_design)

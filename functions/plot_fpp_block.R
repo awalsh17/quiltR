@@ -115,7 +115,13 @@ plot_fpp_block <- function(design,
         arrange(angle) %>%
         ungroup()
     }
-
+    # add order if section_order was given
+    if (!is.null(section_order)) {
+      reshape_design <- reshape_design %>%
+        left_join(tibble::enframe(section_order),
+                  by = c("section" = "name")) %>%
+        mutate(order = value)
+    }
 
     final_plot <- reshape_design %>%
       ggplot() +
@@ -125,8 +131,15 @@ plot_fpp_block <- function(design,
       theme_void(base_family = "Avenir") +
       theme(legend.position = "none")
     if (show_labels) {
-      final_plot <- final_plot +
-        geom_text(aes(label = section, x = ave_x, y = ave_y))
+      # edit to show order!
+      if (!is.null(section_order)) {
+        final_plot <- final_plot +
+          geom_text(aes(label = order, x = ave_x, y = ave_y))
+      } else {
+        final_plot <- final_plot +
+          geom_text(aes(label = section, x = ave_x, y = ave_y))
+      }
+
     }
     if (show_lines) {
       final_plot <- final_plot +
