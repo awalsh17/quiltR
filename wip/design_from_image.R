@@ -54,15 +54,16 @@ image_df <- image_df %>%
   left_join(split_x, by = "x") %>%
   left_join(split_y, by = "y")
 
-
+# Create the final block/pixelated design by averaging the RGB
 image_reduced <- image_df %>%
   group_by(x_group, y_group) %>%
   summarise(across(c(c.1, c.2, c.3), ~sqrt(mean(.x^2))),
             .groups = "drop") %>%
-  mutate(rgb = rgb(c.1, c.2, c.3))
+  mutate(hex = rgb(c.1, c.2, c.3)) %>%
+  rename(r = c.1, g = c.2, b = c.3)
 
-
-ggplot(image_reduced, aes(x_group, y_group)) + geom_raster(aes(fill = rgb)) +
+# Plot with ggplot - need to reverse y axis
+ggplot(image_reduced, aes(x_group, y_group)) + geom_raster(aes(fill = hex)) +
   coord_equal() +
   scale_fill_identity() +
   scale_y_continuous(expand=c(0,0), trans=scales::reverse_trans()) +

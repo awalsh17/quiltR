@@ -30,7 +30,7 @@ cube <- dplyr::bind_rows(cube)
 cube %>%
   ggplot() +
   geom_segment(aes(x = x, y = y, xend = xend, yend = yend)) +
-  xlim(c(0,30)) +
+  xlim(c(0,10)) +
   ylim(c(-10,10)) +
   theme_void()
 

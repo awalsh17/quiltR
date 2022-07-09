@@ -1,6 +1,6 @@
 # quiltR
 
-Code to design quilts in R. This is work in progress and needs more documentation.
+Code to design quilts in R. This is work in progress and is continually developing.
 
 ## Slides from RStudio::conf 2022 talk
 
@@ -46,13 +46,16 @@ Code to take a photo (or image like an ombre color fade) and separate in to bloc
 
 ## Support for splitting a design into blocks
 
-For one example, see the [tutorial_polygons.Rmd](./how_to_run/tutorial_polygons.Rmd) section on creating
-individual blocks.
+For one example, see the [tutorial_polygons.Rmd](./how_to_run/tutorial_polygons.Rmd) 
+section on creating individual blocks.
 
 ## Support for choosing colors
 
 This is a work in progress. Some data on the colors available in Kona cotton
 or Art Gallery Fabrics is in [colors]("./colors").
+
+There is also a script, [wip/matching_color_fabrics.R](./wip/matching_color_fabrics.R) 
+that attempts to find closest match to a given color.
 
 ## Notes
 
