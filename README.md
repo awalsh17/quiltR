@@ -4,7 +4,7 @@ Code to design quilts in R. This is work in progress and is continually developi
 
 ## Slides from RStudio::conf 2022 talk
 
-To be added.
+I gave a talk July 28th, 2022 at RStudio::conf about this project and becoming more creative overall. The slides are available here: [Rstudioconf_alice_slides.pdf](./rstudioconf2022_talk/Rstudioconf_alice_slides.pdf)
 
 ## 2-point perspective polygons
 
@@ -14,7 +14,7 @@ This code generates a landscape with a specified number of rectangular polygons.
 
 See the [tutorial_polygons.Rmd](./how_to_run/tutorial_polygons.Rmd) Rmd and associated html.
 
-## Random Foundation Paper piecing blocks
+## Random foundation paper piecing blocks
 
 This code generates random foundation paper piecing (FPP) patterns
 including the order to add the sections. Can use any starting shape
@@ -56,6 +56,10 @@ or Art Gallery Fabrics is in [colors]("./colors").
 
 There is also a script, [wip/matching_color_fabrics.R](./wip/matching_color_fabrics.R) 
 that attempts to find closest match to a given color.
+
+## R logo FPP pattern
+
+A printable foundation paper piecing [pattern](./examples/R_logo_pattern.pdf) for the R logo.
 
 ## Notes
 

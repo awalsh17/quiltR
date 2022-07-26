@@ -84,11 +84,9 @@ hype2 <- hypergraph_from_incidence_matrix(as.matrix(inc_matrix))
 plot(hype2)
 
 # next steps ------
-# 1: create a forbidden area that we do not allow lines through
-# the design is not more constrained
-# 2: create required lines or points that we require to be
-# completely covered by the lines
-# 3: could change around the splitting to avoid tiny areas
+# 1: See the make_constrained_fpp.R script
+# 2: I could change around the splitting to avoid tiny areas and do more recurvise
+# designs
 
 # print 30 blocks for making a quilt
 # repeat 30 x
