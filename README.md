@@ -4,7 +4,7 @@ Code to design quilts in R. This is work in progress and is continually developi
 
 ## Slides from RStudio::conf 2022 talk
 
-I gave a talk July 28th, 2022 at RStudio::conf about this project and becoming more creative overall. The slides are available here: [Rstudioconf_alice_slides.pdf](./rstudioconf2022_talk/Rstudioconf_alice_slides.pdf)
+I gave a talk July 28th, 2022 at RStudio::conf about this project and becoming more creative overall. The slides are available here: [rstudioconf2022_talk/Rstudioconf_alice_slides.pdf](https://github.com/awalsh17/quiltR/blob/main/rstudioconf2022_talk/Rstudioconf_alices_slides.pdf)
 
 ## 2-point perspective polygons
 
